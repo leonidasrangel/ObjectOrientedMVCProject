@@ -4,10 +4,20 @@
  */
 package com.mycompany.projescolamvc.model.dao;
 
+import java.util.List;
+
 /**
  *
  * @author Rangel
  */
-public interface IDao {
+public interface IDao<T> {
+    void save(T objT);
     
+    void update(String codObgT, T objT);
+    
+    void delete(String codObgT);
+    
+    T find(String codObgT);
+    
+    List<T> findAll();
 }

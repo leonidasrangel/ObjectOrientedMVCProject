@@ -8,6 +8,8 @@ package com.mycompany.projescolamvc.model.exceptions;
  *
  * @author Rangel
  */
-public class AlunoException {
-    
+public class AlunoException extends RuntimeException {
+    public AlunoException(String msg){
+        super(msg);
+    }
 }

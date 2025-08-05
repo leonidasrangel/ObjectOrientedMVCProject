@@ -4,10 +4,42 @@
  */
 package com.mycompany.projescolamvc.model.file;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mycompany.projescolamvc.model.entities.Professor;
+import java.util.List;
+
 /**
  *
  * @author Rangel
  */
 public class SerializadorJSONProfessor {
-    
+    public String toFile(List<Professor> professores) {
+        try {
+            // Convertendo objeto filme para JSON 
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.writeValueAsString(professores);
+
+            return jsonString;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Desserializa JSON em formato String para um objeto Filme
+    public List<Professor> fromFile(String jsonString) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+             
+            List<Professor> professores = mapper.readValue(jsonString, new TypeReference<List<Professor>>() {});
+           // GerenciadorProduto produtos = mapper.readValue(jsonString, GerenciadorProduto.class);
+            
+            return professores;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
+

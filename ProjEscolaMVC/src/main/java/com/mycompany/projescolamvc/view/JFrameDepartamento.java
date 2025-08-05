@@ -26,17 +26,60 @@ public class JFrameDepartamento extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        lblTitulo1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        BtnAluno = new javax.swing.JButton();
+        BtnProfessores = new javax.swing.JButton();
+        BtnDisciplina = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo.setText("Cadastro de Alunos, Professores e Disciplinas");
+
+        lblTitulo1.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
+        lblTitulo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/campus.png"))); // NOI18N
+        lblTitulo1.setText("Instituto Federal");
+
+        BtnAluno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graduation.png"))); // NOI18N
+        BtnAluno.setText("Alunos");
+        jPanel1.add(BtnAluno);
+
+        BtnProfessores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/teacher.png"))); // NOI18N
+        BtnProfessores.setText("Professores");
+        jPanel1.add(BtnProfessores);
+
+        BtnDisciplina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/book.png"))); // NOI18N
+        BtnDisciplina.setText("Disciplinas");
+        jPanel1.add(BtnDisciplina);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblTitulo1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(lblTitulo1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(147, Short.MAX_VALUE))
         );
 
         pack();
@@ -78,5 +121,11 @@ public class JFrameDepartamento extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnAluno;
+    private javax.swing.JButton BtnDisciplina;
+    private javax.swing.JButton BtnProfessores;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblTitulo1;
     // End of variables declaration//GEN-END:variables
 }

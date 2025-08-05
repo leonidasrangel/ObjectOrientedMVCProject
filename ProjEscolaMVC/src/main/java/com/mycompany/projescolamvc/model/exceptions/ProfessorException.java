@@ -8,6 +8,8 @@ package com.mycompany.projescolamvc.model.exceptions;
  *
  * @author Rangel
  */
-public class ProfessorException {
-    
+public class ProfessorException extends RuntimeException  {
+    public ProfessorException(String msg){
+        super(msg);
+    }
 }

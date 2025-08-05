@@ -8,6 +8,8 @@ package com.mycompany.projescolamvc.model.exceptions;
  *
  * @author Rangel
  */
-public class DisciplinaException {
-    
+public class DisciplinaException extends RuntimeException {
+    public DisciplinaException(String msg){
+        super(msg);
+    }
 }
