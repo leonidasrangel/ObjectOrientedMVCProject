@@ -4,18 +4,105 @@
  */
 package com.mycompany.projescolamvc.view;
 
+import com.mycompany.projescolamvc.connection.SQLiteConnector;
+import com.mycompany.projescolamvc.controller.AlunoController;
+import com.mycompany.projescolamvc.controller.DisciplinaController;
+import com.mycompany.projescolamvc.model.dao.AlunoDAOBanco;
+import com.mycompany.projescolamvc.model.dao.DisciplinaDAOBanco;
+import com.mycompany.projescolamvc.model.dao.IDao;
+import com.mycompany.projescolamvc.model.entities.Aluno;
+import com.mycompany.projescolamvc.model.entities.Disciplina;
+import com.mycompany.projescolamvc.view.tablemodels.TMCadAluno;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Rangel
  */
 public class JDialogSelectAluno extends javax.swing.JDialog {
+    private boolean editando;
+    private String cpfEscolhido;
+    private AlunoController alunoController;
+    private DisciplinaController disciplinaController;
+    private Disciplina dis;
+    private Aluno alunoEscolhido;
 
-    /**
-     * Creates new form JDialogSelectAluno
-     */
-    public JDialogSelectAluno(java.awt.Frame parent, boolean modal) {
+
+    public JDialogSelectAluno(java.awt.Frame parent, boolean modal,  Disciplina d) throws SQLException {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
+        
+        //IDao disciplinaDao = new DisciplinaDAOFile("ListagemDisciplinas.json");
+        
+        SQLiteConnector conexao = new SQLiteConnector("banco.sqlite");
+        IDao disciplinaDao = new DisciplinaDAOBanco(conexao.getConnection());
+        this.disciplinaController = new DisciplinaController(disciplinaDao);
+        
+        
+        //IDao alunoDao =new AlunoDAOFile("ListagemAlunos.json");
+        
+        SQLiteConnector conexao2 = new SQLiteConnector("banco.sqlite");
+        IDao alunoDao = new AlunoDAOBanco(conexao2.getConnection());
+        this.alunoController = new AlunoController(alunoDao);
+        initData();
+        this.dis = d;
+    }
+    
+    public JDialogSelectAluno(java.awt.Dialog parent, boolean modal,  Disciplina d) throws SQLException {
+        super(parent, modal);
+        initComponents();
+        setLocationRelativeTo(parent);
+        
+        //IDao disciplinaDao = new DisciplinaDAOFile("ListagemDisciplinas.json");
+        SQLiteConnector conexao = new SQLiteConnector("banco.sqlite");
+        IDao disciplinaDao = new DisciplinaDAOBanco(conexao.getConnection());
+        this.disciplinaController = new DisciplinaController(disciplinaDao);
+        
+        //IDao alunoDao = new AlunoDAOFile("ListagemAlunos.json");
+        SQLiteConnector conexao2 = new SQLiteConnector("banco.sqlite");
+        IDao alunoDao = new AlunoDAOBanco(conexao2.getConnection());
+        this.alunoController = new AlunoController(alunoDao);
+        initData();
+        this.dis = d;
+    }
+    
+    private void initData(){
+
+        this.editando = true;
+
+        this.habilitarCampos(false);
+        this.limparCampos();
+
+        this.atualizarTabela();
+    }
+    
+    public void habilitarCampos(boolean flag) {
+        edtCPF.setEnabled(flag);
+        edtMatricula.setEnabled(flag);
+        edtNome.setEnabled(flag);
+        edtIdade.setEnabled(flag);
+        edtAnoIngresso.setEnabled(flag);
+    }
+
+    public void limparCampos() {
+        edtCPF.setText("");
+        edtMatricula.setText("");
+        edtNome.setText("");
+        edtIdade.setText("");
+        edtAnoIngresso.setText("");
+    }
+
+    public void objetoParaCampos(Aluno p) {
+       edtCPF.setText(p.getCpf());
+       edtMatricula.setText(p.getMatricula());
+       edtNome.setText(p.getNome());
+       edtIdade.setText(p.getIdade() + "");
+       edtAnoIngresso.setText(p.getAnoIngresso()+ "");
     }
 
     /**
@@ -27,64 +114,283 @@ public class JDialogSelectAluno extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        lblAluno = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnNovo = new javax.swing.JButton();
+        btnSelecionar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnMatricular = new javax.swing.JButton();
+        lblCPF = new javax.swing.JLabel();
+        edtCPF = new javax.swing.JTextField();
+        lblMatricula = new javax.swing.JLabel();
+        edtMatricula = new javax.swing.JTextField();
+        edtNome = new javax.swing.JTextField();
+        lblNome = new javax.swing.JLabel();
+        lblIdade = new javax.swing.JLabel();
+        edtIdade = new javax.swing.JTextField();
+        edtAnoIngresso = new javax.swing.JTextField();
+        lblAnoIngresso = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        grdAluno = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblAluno.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
+        lblAluno.setForeground(new java.awt.Color(255, 255, 255));
+        lblAluno.setText("Selecionar Aluno ");
+        jPanel1.add(lblAluno);
+
+        btnNovo.setBackground(new java.awt.Color(204, 204, 204));
+        btnNovo.setForeground(new java.awt.Color(0, 0, 0));
+        btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/novo-arquivo.png"))); // NOI18N
+        btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnNovo);
+
+        btnSelecionar.setBackground(new java.awt.Color(204, 204, 204));
+        btnSelecionar.setForeground(new java.awt.Color(0, 0, 0));
+        btnSelecionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/editar-texto.png"))); // NOI18N
+        btnSelecionar.setText("Selecionar");
+        btnSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelecionarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnSelecionar);
+
+        btnCancelar.setBackground(new java.awt.Color(204, 204, 204));
+        btnCancelar.setForeground(new java.awt.Color(0, 0, 0));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar.png"))); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnCancelar);
+
+        btnMatricular.setBackground(new java.awt.Color(204, 204, 204));
+        btnMatricular.setForeground(new java.awt.Color(0, 0, 0));
+        btnMatricular.setIcon(new javax.swing.ImageIcon(getClass().getResource("/salvar-arquivo.png"))); // NOI18N
+        btnMatricular.setText("Matricular");
+        btnMatricular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMatricularActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnMatricular);
+
+        lblCPF.setForeground(new java.awt.Color(255, 255, 255));
+        lblCPF.setText("CPF:");
+
+        lblMatricula.setForeground(new java.awt.Color(255, 255, 255));
+        lblMatricula.setText("Matricula:");
+
+        lblNome.setForeground(new java.awt.Color(255, 255, 255));
+        lblNome.setText("Nome:");
+
+        lblIdade.setForeground(new java.awt.Color(255, 255, 255));
+        lblIdade.setText("Idade:");
+
+        edtIdade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtIdadeActionPerformed(evt);
+            }
+        });
+
+        lblAnoIngresso.setForeground(new java.awt.Color(255, 255, 255));
+        lblAnoIngresso.setText("Ano Ingresso:");
+
+        grdAluno.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        grdAluno.setSelectionBackground(new java.awt.Color(0, 102, 102));
+        grdAluno.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jScrollPane2.setViewportView(grdAluno);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblMatricula)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(edtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblIdade)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(67, 67, 67)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblNome)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(edtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblAnoIngresso)
+                                .addGap(18, 18, 18)
+                                .addComponent(edtAnoIngresso, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblCPF)
+                            .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNome)
+                            .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(45, 45, 45))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblIdade)
+                        .addComponent(edtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblAnoIngresso)
+                        .addComponent(edtAnoIngresso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblMatricula)
+                        .addComponent(edtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        JDialogAluno tela = null;
+        try {
+            tela = new JDialogAluno(this,true);
+        } catch (SQLException ex) {
+            Logger.getLogger(JDialogSelectAluno.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tela.setVisible(true);
+        atualizarTabela();
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarActionPerformed
+        this.alunoEscolhido = this.getObjetoSelecionadoNaGrid();
+
+        String CPFEscolhido = alunoEscolhido.getCpf();
+
+        Aluno alunoExistente = alunoController.buscarAluno(CPFEscolhido);
+
+        if (alunoExistente == null) {
+            JOptionPane.showMessageDialog(this, "Não existe aluno com esse cpf.");
+        } else {
+            this.habilitarCampos(true);
+            this.objetoParaCampos(alunoExistente);
+            this.editando = true;
+            this.cpfEscolhido = alunoExistente.getCpf();
+        }
+    }//GEN-LAST:event_btnSelecionarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.limparCampos();
+        this.habilitarCampos(false);
+        this.editando = false;
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnMatricularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMatricularActionPerformed
+        Aluno a = this.alunoEscolhido;  // Obtém o aluno selecionado na interface
+
+        if (a != null) {
+            this.disciplinaController.atualizarDisciplinaA(dis, edtCPF.getText(), edtNome.getText(), edtIdade.getText(), edtMatricula.getText(), edtAnoIngresso.getText());
+
+            JOptionPane.showMessageDialog(this, "Aluno matriculado com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um aluno primeiro.");
+        }
+
+        this.limparCampos();
+        this.habilitarCampos(false);
+        this.atualizarTabela();
+    }//GEN-LAST:event_btnMatricularActionPerformed
+
+    private void edtIdadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtIdadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtIdadeActionPerformed
+    private void grdAlunoMouseClicked(java.awt.event.MouseEvent evt) {                                       
+       Aluno a = this.getObjetoSelecionadoNaGrid();
+       this.objetoParaCampos(a);
+    }
+    
+    public Aluno getObjetoSelecionadoNaGrid() {
+        int linhaSelecionada = grdAluno.getSelectedRow();
+
+        if (linhaSelecionada >= 0) {
+            TMCadAluno tmCadAluno = (TMCadAluno) grdAluno.getModel();
+
+             Aluno aluno = tmCadAluno.getObjetoAluno(linhaSelecionada);
+            return aluno;
+        }
+        
+        return null;
+    }
+    
+    public void atualizarTabela() {
+        List<Aluno> lista = this.alunoController.listarAlunos();
+        TMCadAluno tmcadaluno = new TMCadAluno(lista);
+        grdAluno.setModel(tmcadaluno);
+    }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDialogSelectAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDialogSelectAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDialogSelectAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDialogSelectAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                JDialogSelectAluno dialog = new JDialogSelectAluno(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnMatricular;
+    private javax.swing.JButton btnNovo;
+    private javax.swing.JButton btnSelecionar;
+    private javax.swing.JTextField edtAnoIngresso;
+    private javax.swing.JTextField edtCPF;
+    private javax.swing.JTextField edtIdade;
+    private javax.swing.JTextField edtMatricula;
+    private javax.swing.JTextField edtNome;
+    private javax.swing.JTable grdAluno;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblAluno;
+    private javax.swing.JLabel lblAnoIngresso;
+    private javax.swing.JLabel lblCPF;
+    private javax.swing.JLabel lblIdade;
+    private javax.swing.JLabel lblMatricula;
+    private javax.swing.JLabel lblNome;
     // End of variables declaration//GEN-END:variables
 }

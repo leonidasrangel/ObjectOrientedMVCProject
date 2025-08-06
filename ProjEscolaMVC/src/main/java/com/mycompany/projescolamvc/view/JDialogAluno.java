@@ -4,18 +4,91 @@
  */
 package com.mycompany.projescolamvc.view;
 
+import com.mycompany.projescolamvc.connection.SQLiteConnector;
+import com.mycompany.projescolamvc.controller.AlunoController;
+import com.mycompany.projescolamvc.model.dao.AlunoDAOBanco;
+import com.mycompany.projescolamvc.model.dao.IDao;
+import com.mycompany.projescolamvc.model.entities.Aluno;
+import com.mycompany.projescolamvc.view.tablemodels.TMCadAluno;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Rangel
  */
 public class JDialogAluno extends javax.swing.JDialog {
 
-    /**
-     * Creates new form JDialogAluno
-     */
-    public JDialogAluno(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
+    private boolean editando;
+    private String cpfAntigo;
+    private AlunoController alunoController;
+    
+    
+public JDialogAluno(java.awt.Frame parent, boolean modal) throws SQLException {
+    super(parent, modal);
+    this.editando = false;
+    this.cpfAntigo = "";
+    
+    //IDao alunoDao = new AlunoDAOFile("ListagemAlunos.json");
+    
+    SQLiteConnector conexao = new SQLiteConnector("banco.sqlite");
+    IDao alunoDao = new AlunoDAOBanco(conexao.getConnection());
+    
+    this.alunoController = new AlunoController(alunoDao);
+    
+    
+    initComponents();
+    setLocationRelativeTo(parent);
+    initData();
+}
+
+public JDialogAluno(java.awt.Dialog parent, boolean modal) throws SQLException {
+    super(parent, modal);
+    this.editando = false;
+    this.cpfAntigo = "";
+    
+    //IDao alunoDao = new AlunoDAOFile("ListagemAlunos.json");
+    
+    SQLiteConnector conexao = new SQLiteConnector("banco.sqlite");
+    IDao alunoDao = new AlunoDAOBanco(conexao.getConnection());
+    this.alunoController = new AlunoController(alunoDao);
+    
+    initComponents();
+    setLocationRelativeTo(parent);
+    initData();
+}
+
+private void initData() {
+    this.habilitarCampos(false);
+    this.limparCampos();
+
+    this.atualizarTabela();
+}
+
+    public void habilitarCampos(boolean flag) {
+        edtCPF.setEnabled(flag);
+        edtMatricula.setEnabled(flag);
+        edtNome.setEnabled(flag);
+        edtIdade.setEnabled(flag);
+        edtAnoIngresso.setEnabled(flag);
+    }
+
+    public void limparCampos() {
+        edtCPF.setText("");
+        edtMatricula.setText("");
+        edtNome.setText("");
+        edtIdade.setText("");
+        edtAnoIngresso.setText("");
+    }
+
+    public void objetoParaCampos(Aluno p) {
+       edtCPF.setText(p.getCpf());
+       edtMatricula.setText(p.getMatricula());
+       edtNome.setText(p.getNome());
+       edtIdade.setText(p.getIdade() + "");
+       edtAnoIngresso.setText(p.getAnoIngresso()+ "");
+
     }
 
     /**
@@ -27,64 +100,342 @@ public class JDialogAluno extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        lblAluno = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnNovo = new javax.swing.JButton();
+        btnEdt = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        lblMatricula = new javax.swing.JLabel();
+        edtMatricula = new javax.swing.JTextField();
+        lblNome = new javax.swing.JLabel();
+        edtNome = new javax.swing.JTextField();
+        lblIdade = new javax.swing.JLabel();
+        edtIdade = new javax.swing.JTextField();
+        lblAnoIngresso = new javax.swing.JLabel();
+        edtAnoIngresso = new javax.swing.JTextField();
+        lblCPF = new javax.swing.JLabel();
+        edtCPF = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        grdAluno = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setForeground(new java.awt.Color(0, 0, 0));
+
+        lblAluno.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
+        lblAluno.setForeground(new java.awt.Color(51, 51, 51));
+        lblAluno.setText("Aluno ");
+        jPanel1.add(lblAluno);
+
+        btnNovo.setBackground(new java.awt.Color(204, 204, 204));
+        btnNovo.setForeground(new java.awt.Color(0, 0, 0));
+        btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/novo-arquivo.png"))); // NOI18N
+        btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnNovo);
+
+        btnEdt.setBackground(new java.awt.Color(204, 204, 204));
+        btnEdt.setForeground(new java.awt.Color(0, 0, 0));
+        btnEdt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/editar-texto.png"))); // NOI18N
+        btnEdt.setText("Editar");
+        btnEdt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEdtActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnEdt);
+
+        btnCancelar.setBackground(new java.awt.Color(204, 204, 204));
+        btnCancelar.setForeground(new java.awt.Color(0, 0, 0));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar.png"))); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnCancelar);
+
+        btnExcluir.setBackground(new java.awt.Color(204, 204, 204));
+        btnExcluir.setForeground(new java.awt.Color(0, 0, 0));
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/excluir.png"))); // NOI18N
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnExcluir);
+
+        btnSalvar.setBackground(new java.awt.Color(204, 204, 204));
+        btnSalvar.setForeground(new java.awt.Color(0, 0, 0));
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/salvar-arquivo.png"))); // NOI18N
+        btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnSalvar);
+
+        lblMatricula.setForeground(new java.awt.Color(51, 51, 51));
+        lblMatricula.setText("Matricula:");
+
+        lblNome.setForeground(new java.awt.Color(51, 51, 51));
+        lblNome.setText("Nome:");
+
+        lblIdade.setForeground(new java.awt.Color(51, 51, 51));
+        lblIdade.setText("Idade:");
+
+        edtIdade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtIdadeActionPerformed(evt);
+            }
+        });
+
+        lblAnoIngresso.setForeground(new java.awt.Color(51, 51, 51));
+        lblAnoIngresso.setText("Ano Ingresso:");
+
+        lblCPF.setForeground(new java.awt.Color(51, 51, 51));
+        lblCPF.setText("CPF:");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(lblCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(lblMatricula)
+                        .addGap(18, 18, 18)
+                        .addComponent(edtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblIdade)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(lblNome)
+                        .addGap(18, 18, 18)
+                        .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(edtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblAnoIngresso)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtAnoIngresso, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNome)
+                    .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCPF))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMatricula)
+                    .addComponent(edtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblIdade)
+                    .addComponent(lblAnoIngresso)
+                    .addComponent(edtAnoIngresso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22))
+        );
+
+        grdAluno.setForeground(new java.awt.Color(0, 0, 0));
+        grdAluno.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        grdAluno.setGridColor(new java.awt.Color(204, 204, 204));
+        grdAluno.setSelectionBackground(new java.awt.Color(0, 102, 102));
+        grdAluno.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jScrollPane2.setViewportView(grdAluno);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        this.habilitarCampos(true);
+        this.limparCampos();
+        this.editando = false;
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnEdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEdtActionPerformed
+        Aluno alunoEscolhido = this.getObjetoSelecionadoNaGrid();
+
+        String CPFEscolhido = alunoEscolhido.getCpf();
+
+        Aluno alunoEditando = alunoController.buscarAluno(CPFEscolhido);
+
+        if (alunoEditando == null) {
+            JOptionPane.showMessageDialog(this, "Não existe aluno com esse cpf.");
+            this.editando = false;
+        } else {
+            this.limparCampos();
+            this.habilitarCampos(true);
+
+            this.objetoParaCampos(alunoEditando);
+            this.editando = true;
+            this.cpfAntigo = alunoEditando.getCpf();
+        }
+    }//GEN-LAST:event_btnEdtActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.limparCampos();
+        this.habilitarCampos(false);
+        this.editando = false;
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        Aluno alunoEscolhido = this.getObjetoSelecionadoNaGrid();
+
+        String cpfEscolhido = alunoEscolhido.getCpf();
+
+        Aluno a = alunoController.buscarAluno(cpfEscolhido);
+
+        if (a == null) {
+            JOptionPane.showMessageDialog(this, "Não existe aluno com este CPF.");
+        } else {
+            this.alunoController.removerAluno(cpfEscolhido);
+            JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
+        }
+
+        this.atualizarTabela();
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        Aluno alunov = alunoController.buscarAluno(edtCPF.getText());
+        if (this.editando == true) {
+            if(cpfAntigo == null ? edtCPF.getText() == null : cpfAntigo.equals(edtCPF.getText()))
+            this.alunoController.atualizarAluno(cpfAntigo,edtCPF.getText(), edtNome.getText(), edtIdade.getText(), edtMatricula.getText(), edtAnoIngresso.getText());
+            else if(alunov == null)
+            this.alunoController.atualizarAluno(cpfAntigo,edtCPF.getText(), edtNome.getText(), edtIdade.getText(), edtMatricula.getText(), edtAnoIngresso.getText());
+            else
+            JOptionPane.showMessageDialog(this, "Já existe um aluno com esse cpf");
+        } else { //Estou inserindo
+
+            if(alunov == null){
+                this.alunoController.adicionarAluno(edtCPF.getText(), edtNome.getText(), edtIdade.getText(), edtMatricula.getText(), edtAnoIngresso.getText());
+            } else {
+                JOptionPane.showMessageDialog(this, "Já existe um aluno com esse cpf");
+            }
+        }
+
+        this.limparCampos();
+        this.habilitarCampos(false);
+        this.editando = false;
+
+        this.atualizarTabela();
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void edtIdadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtIdadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtIdadeActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDialogAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDialogAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDialogAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDialogAluno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void grdAlunoMouseClicked(java.awt.event.MouseEvent evt) {                                       
+       Aluno a = this.getObjetoSelecionadoNaGrid();
+       this.objetoParaCampos(a);
+    }
+    
+    public Aluno getObjetoSelecionadoNaGrid() {
+        int linhaSelecionada = grdAluno.getSelectedRow();
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                JDialogAluno dialog = new JDialogAluno(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+        if (linhaSelecionada >= 0) {
+            TMCadAluno tmCadAluno = (TMCadAluno) grdAluno.getModel();
+
+             Aluno aluno = tmCadAluno.getObjetoAluno(linhaSelecionada);
+            return aluno;
+        }
+        
+        return null;
+    }
+    
+    public void atualizarTabela() {
+        List<Aluno> lista = this.alunoController.listarAlunos();
+        TMCadAluno tmcadaluno = new TMCadAluno(lista);
+        grdAluno.setModel(tmcadaluno);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnEdt;
+    private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnNovo;
+    private javax.swing.JButton btnSalvar;
+    private javax.swing.JTextField edtAnoIngresso;
+    private javax.swing.JTextField edtCPF;
+    private javax.swing.JTextField edtIdade;
+    private javax.swing.JTextField edtMatricula;
+    private javax.swing.JTextField edtNome;
+    private javax.swing.JTable grdAluno;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblAluno;
+    private javax.swing.JLabel lblAnoIngresso;
+    private javax.swing.JLabel lblCPF;
+    private javax.swing.JLabel lblIdade;
+    private javax.swing.JLabel lblMatricula;
+    private javax.swing.JLabel lblNome;
     // End of variables declaration//GEN-END:variables
 }

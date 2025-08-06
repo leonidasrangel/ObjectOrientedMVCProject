@@ -4,18 +4,67 @@
  */
 package com.mycompany.projescolamvc.view;
 
+import com.mycompany.projescolamvc.connection.SQLiteConnector;
+import com.mycompany.projescolamvc.controller.DisciplinaController;
+import com.mycompany.projescolamvc.model.dao.DisciplinaDAOBanco;
+import com.mycompany.projescolamvc.model.dao.IDao;
+import com.mycompany.projescolamvc.model.entities.Disciplina;
+import com.mycompany.projescolamvc.view.tablemodels.TMCadDisciplina;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Rangel
  */
 public class JDialogDisciplina extends javax.swing.JDialog {
 
-    /**
-     * Creates new form JDialogDisciplina
-     */
-    public JDialogDisciplina(java.awt.Frame parent, boolean modal) {
+    private boolean editando;
+    private String codAntigo;
+    private DisciplinaController disciplinaController;
+    
+
+     public JDialogDisciplina(java.awt.Frame parent, boolean modal) throws SQLException {
         super(parent, modal);
+         this.editando = false;
+         this.codAntigo = "";
+         
+        //IDao disciplinaDao = new DisciplinaDAOFile("ListagemDisciplinas.json");
+        
+        SQLiteConnector conexao = new SQLiteConnector("banco.sqlite");
+        IDao disciplinaDao = new DisciplinaDAOBanco(conexao.getConnection());
+        this.disciplinaController = new DisciplinaController(disciplinaDao);
+         
         initComponents();
+        setLocationRelativeTo(parent);
+        
+
+        this.habilitarCampos(false);
+        this.limparCampos();
+        this.atualizarTabela();
+    }
+    public void habilitarCampos(boolean flag) {
+        edtCod.setEnabled(flag);
+        edtNome.setEnabled(flag);
+        edtSemestre.setEnabled(flag);
+        edtHorario.setEnabled(flag);
+    }
+
+    public void limparCampos() {
+        edtCod.setText("");
+        edtNome.setText("");
+        edtSemestre.setText("");
+        edtHorario.setText("");
+    }
+
+    public void objetoParaCampos(Disciplina p) {
+      edtCod.setText(p.getCod());
+       edtNome.setText(p.getNome());
+       edtSemestre.setText(p.getSemestre()+ "");
+       edtHorario.setText(p.getHorario());
     }
 
     /**
@@ -27,64 +76,430 @@ public class JDialogDisciplina extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        JPanelDisciplina = new javax.swing.JPanel();
+        jlbDisciplina = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnNovo = new javax.swing.JButton();
+        btnEdt = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
+        btnMatricular = new javax.swing.JButton();
+        btnMatricular2 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        lblNome = new javax.swing.JLabel();
+        edtNome = new javax.swing.JTextField();
+        lblSemestre = new javax.swing.JLabel();
+        edtSemestre = new javax.swing.JTextField();
+        lblHorario = new javax.swing.JLabel();
+        edtHorario = new javax.swing.JTextField();
+        edtCod = new javax.swing.JTextField();
+        lblCod = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        grdDisciplina = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jlbDisciplina.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
+        jlbDisciplina.setForeground(new java.awt.Color(51, 51, 51));
+        jlbDisciplina.setText("Disciplina ");
+        JPanelDisciplina.add(jlbDisciplina);
+
+        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
+
+        btnNovo.setBackground(new java.awt.Color(204, 204, 204));
+        btnNovo.setForeground(new java.awt.Color(0, 0, 0));
+        btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/novo-arquivo.png"))); // NOI18N
+        btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
+
+        btnEdt.setBackground(new java.awt.Color(204, 204, 204));
+        btnEdt.setForeground(new java.awt.Color(0, 0, 0));
+        btnEdt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/editar-texto.png"))); // NOI18N
+        btnEdt.setText("Editar");
+        btnEdt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEdtActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setBackground(new java.awt.Color(204, 204, 204));
+        btnCancelar.setForeground(new java.awt.Color(0, 0, 0));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar.png"))); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnExcluir.setBackground(new java.awt.Color(204, 204, 204));
+        btnExcluir.setForeground(new java.awt.Color(0, 0, 0));
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/excluir.png"))); // NOI18N
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+
+        btnSalvar.setBackground(new java.awt.Color(204, 204, 204));
+        btnSalvar.setForeground(new java.awt.Color(0, 0, 0));
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/salvar-arquivo.png"))); // NOI18N
+        btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+
+        btnMatricular.setBackground(new java.awt.Color(204, 204, 204));
+        btnMatricular.setForeground(new java.awt.Color(0, 0, 0));
+        btnMatricular.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graduation.png"))); // NOI18N
+        btnMatricular.setText("Matricular Aluno");
+        btnMatricular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMatricularActionPerformed(evt);
+            }
+        });
+
+        btnMatricular2.setBackground(new java.awt.Color(204, 204, 204));
+        btnMatricular2.setForeground(new java.awt.Color(0, 0, 0));
+        btnMatricular2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/teacher.png"))); // NOI18N
+        btnMatricular2.setText("Professor Ministrante");
+        btnMatricular2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMatricular2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(95, 95, 95)
+                        .addComponent(btnNovo)
+                        .addGap(5, 5, 5)
+                        .addComponent(btnEdt)
+                        .addGap(5, 5, 5)
+                        .addComponent(btnCancelar)
+                        .addGap(5, 5, 5)
+                        .addComponent(btnExcluir)
+                        .addGap(5, 5, 5)
+                        .addComponent(btnSalvar))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(175, 175, 175)
+                        .addComponent(btnMatricular)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnMatricular2)))
+                .addContainerGap(120, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNovo)
+                    .addComponent(btnEdt)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnExcluir)
+                    .addComponent(btnSalvar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnMatricular)
+                    .addComponent(btnMatricular2))
+                .addContainerGap())
+        );
+
+        lblNome.setForeground(new java.awt.Color(51, 51, 51));
+        lblNome.setText("Nome:");
+
+        edtNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtNomeActionPerformed(evt);
+            }
+        });
+
+        lblSemestre.setForeground(new java.awt.Color(51, 51, 51));
+        lblSemestre.setText("Semestre:");
+
+        lblHorario.setForeground(new java.awt.Color(51, 51, 51));
+        lblHorario.setText("Horario:");
+
+        edtHorario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtHorarioActionPerformed(evt);
+            }
+        });
+
+        edtCod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtCodActionPerformed(evt);
+            }
+        });
+
+        lblCod.setForeground(new java.awt.Color(51, 51, 51));
+        lblCod.setText("Código:");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(77, 77, 77)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblNome)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblCod)
+                        .addGap(18, 18, 18)
+                        .addComponent(edtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(46, 46, 46)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblHorario)
+                        .addGap(26, 26, 26)
+                        .addComponent(edtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblSemestre)
+                        .addGap(18, 18, 18)
+                        .addComponent(edtSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(edtCod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblCod))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(edtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblHorario)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblNome))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(edtSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblSemestre)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        grdDisciplina.setForeground(new java.awt.Color(0, 0, 0));
+        grdDisciplina.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        grdDisciplina.setSelectionBackground(new java.awt.Color(0, 102, 102));
+        grdDisciplina.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jScrollPane2.setViewportView(grdDisciplina);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(JPanelDisciplina, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addGap(6, 6, 6)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(JPanelDisciplina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        this.limparCampos();
+        this.habilitarCampos(true);
+        this.editando = false;
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnEdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEdtActionPerformed
+        Disciplina disciplinaEscolhida = this.getObjetoSelecionadoNaGrid();
+
+        String codEscolhido = disciplinaEscolhida.getCod();
+
+        Disciplina disciplinaEditando = disciplinaController.buscarDisciplina(codEscolhido);
+
+        if (disciplinaEditando == null) {
+            JOptionPane.showMessageDialog(this, "Disciplina não existente na escola.");
+            this.editando = false;
+        } else {
+            this.limparCampos();
+            this.habilitarCampos(true);
+
+            this.objetoParaCampos(disciplinaEditando);
+            this.editando = true;
+            this.codAntigo = disciplinaEditando.getCod();
+        }
+    }//GEN-LAST:event_btnEdtActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.limparCampos();
+        this.habilitarCampos(false);
+        this.editando = false;
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        Disciplina disciplinaEscolhida = this.getObjetoSelecionadoNaGrid();
+
+        String nomeEscolhido = disciplinaEscolhida.getCod();
+
+        Disciplina a = disciplinaController.buscarDisciplina(nomeEscolhido);
+
+        if (a == null) {
+            JOptionPane.showMessageDialog(this, "Não existe disciplina com este cod.");
+        } else {
+            this.disciplinaController.removerDisciplina(nomeEscolhido);
+            JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
+        }
+
+        this.atualizarTabela();
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        if (this.editando == true) {
+            this.disciplinaController.atualizarDisciplina(codAntigo, edtNome.getText(), edtSemestre.getText(), edtHorario.getText());
+        } else {
+            this.disciplinaController.adicionarDisciplina(edtCod.getText(), edtNome.getText(), edtSemestre.getText(), edtHorario.getText());
+        }
+
+        this.limparCampos();
+        this.habilitarCampos(false);
+
+        this.atualizarTabela();
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnMatricularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMatricularActionPerformed
+        Disciplina DisciplinaEscolhida = this.getObjetoSelecionadoNaGrid();
+        if(DisciplinaEscolhida== null){
+            JOptionPane.showMessageDialog(this, "Disciplina não existente na escola.");
+        }else {
+            JDialogSelectAluno tela = null;
+            try {
+                tela = new JDialogSelectAluno(this,true, DisciplinaEscolhida);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDialogDisciplina.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tela.setVisible(true);
+            atualizarTabela();
+        }
+    }//GEN-LAST:event_btnMatricularActionPerformed
+
+    private void btnMatricular2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMatricular2ActionPerformed
+        Disciplina DisciplinaEscolhida = this.getObjetoSelecionadoNaGrid();
+        if(DisciplinaEscolhida== null){
+            JOptionPane.showMessageDialog(this, "Disciplina não existente na escola.");
+        }else {
+            JDialogSelectProfessor tela = null;
+            try {
+                tela = new JDialogSelectProfessor(this,true, DisciplinaEscolhida);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDialogDisciplina.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tela.setVisible(true);
+            atualizarTabela();
+        }
+
+    }//GEN-LAST:event_btnMatricular2ActionPerformed
+
+    private void edtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtNomeActionPerformed
+
+    private void edtHorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtHorarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtHorarioActionPerformed
+
+    private void edtCodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtCodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtCodActionPerformed
+    private void grdAlunoMouseClicked(java.awt.event.MouseEvent evt) {                                       
+       Disciplina a = this.getObjetoSelecionadoNaGrid();
+       this.objetoParaCampos(a);
+    }
+    
+    public Disciplina getObjetoSelecionadoNaGrid() {
+        int linhaSelecionada = grdDisciplina.getSelectedRow();
+
+        if (linhaSelecionada >= 0) {
+            TMCadDisciplina tmCadAluno = (TMCadDisciplina) grdDisciplina.getModel();
+
+             Disciplina d = tmCadAluno.getObjetoAluno(linhaSelecionada);
+            return d;
+        }
+        
+        return null;
+    }
+    
+    public void atualizarTabela() {
+        List<Disciplina> lista = this.disciplinaController.listarDisciplinas();
+        TMCadDisciplina tmcadisciplina = new TMCadDisciplina(lista);
+        grdDisciplina.setModel(tmcadisciplina);
+    }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDialogDisciplina.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDialogDisciplina.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDialogDisciplina.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDialogDisciplina.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                JDialogDisciplina dialog = new JDialogDisciplina(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel JPanelDisciplina;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnEdt;
+    private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnMatricular;
+    private javax.swing.JButton btnMatricular2;
+    private javax.swing.JButton btnNovo;
+    private javax.swing.JButton btnSalvar;
+    private javax.swing.JTextField edtCod;
+    private javax.swing.JTextField edtHorario;
+    private javax.swing.JTextField edtNome;
+    private javax.swing.JTextField edtSemestre;
+    private javax.swing.JTable grdDisciplina;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel jlbDisciplina;
+    private javax.swing.JLabel lblCod;
+    private javax.swing.JLabel lblHorario;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblSemestre;
     // End of variables declaration//GEN-END:variables
 }

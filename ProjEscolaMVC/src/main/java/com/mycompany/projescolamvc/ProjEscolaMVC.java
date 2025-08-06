@@ -4,6 +4,8 @@
 
 package com.mycompany.projescolamvc;
 
+import com.mycompany.projescolamvc.view.JFrameDepartamento;
+
 /**
  *
  * @author Rangel
@@ -11,6 +13,7 @@ package com.mycompany.projescolamvc;
 public class ProjEscolaMVC {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        JFrameDepartamento tela = new JFrameDepartamento();
+        tela.setVisible(true);
     }
 }

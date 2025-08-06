@@ -4,6 +4,10 @@
  */
 package com.mycompany.projescolamvc.view;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Rangel
@@ -15,6 +19,7 @@ public class JFrameDepartamento extends javax.swing.JFrame {
      */
     public JFrameDepartamento() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -46,30 +51,45 @@ public class JFrameDepartamento extends javax.swing.JFrame {
 
         BtnAluno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graduation.png"))); // NOI18N
         BtnAluno.setText("Alunos");
+        BtnAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAlunoActionPerformed(evt);
+            }
+        });
         jPanel1.add(BtnAluno);
 
         BtnProfessores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/teacher.png"))); // NOI18N
         BtnProfessores.setText("Professores");
+        BtnProfessores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnProfessoresActionPerformed(evt);
+            }
+        });
         jPanel1.add(BtnProfessores);
 
         BtnDisciplina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/book.png"))); // NOI18N
         BtnDisciplina.setText("Disciplinas");
+        BtnDisciplina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnDisciplinaActionPerformed(evt);
+            }
+        });
         jPanel1.add(BtnDisciplina);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblTitulo1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,40 +105,40 @@ public class JFrameDepartamento extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BtnAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAlunoActionPerformed
+        JDialogAluno tela = null;
+        try {
+            tela = new JDialogAluno(this,true);
+        } catch (SQLException ex) {
+            Logger.getLogger(JFrameDepartamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       tela.setVisible(true);
+    }//GEN-LAST:event_BtnAlunoActionPerformed
+
+    private void BtnProfessoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnProfessoresActionPerformed
+        JDialogProfessor tela = null;
+        try {
+            tela = new JDialogProfessor(this, true);
+        } catch (SQLException ex) {
+            Logger.getLogger(JFrameDepartamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tela.setVisible(true);
+    }//GEN-LAST:event_BtnProfessoresActionPerformed
+
+    private void BtnDisciplinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDisciplinaActionPerformed
+        JDialogDisciplina tela = null;
+        try {
+            tela = new JDialogDisciplina(this, true);
+        } catch (SQLException ex) {
+            Logger.getLogger(JFrameDepartamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       tela.setVisible(true);
+    }//GEN-LAST:event_BtnDisciplinaActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JFrameDepartamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JFrameDepartamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JFrameDepartamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JFrameDepartamento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new JFrameDepartamento().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAluno;
